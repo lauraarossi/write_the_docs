@@ -3,20 +3,6 @@ import logging
 import traceback
 
 
-def run_command(cmd: str, logger: logging.Logger) -> CompletedProcess[bytes]:
-    """
-    Runs a powershell command.
-    """
-    try:
-        completed = run(["powershell", "-Command", cmd], capture_output=True)
-        return completed
-
-    except Exception as e:
-        msg = f"Error in run_command call: {traceback.format_exc()}"
-        logger.error(msg)
-        raise e
-
-
 def shell(args: list[str], logger: logging.Logger, raise_err: bool = True):
     """
     Calls subprocess.Popen pipes to call out to the shell.
@@ -38,6 +24,8 @@ def shell(args: list[str], logger: logging.Logger, raise_err: bool = True):
         Decoded stdout.
     err: str
         Decoded stderr.
+    exit_code: int
+        Exit code.
     """
     try:
         p = Popen(args, stdin=PIPE, stdout=PIPE, stderr=PIPE, shell=False)
@@ -56,9 +44,26 @@ def shell(args: list[str], logger: logging.Logger, raise_err: bool = True):
         elif out:
             logger.info(out)
 
-        return out, err, p.returncode
+        return out, err, exit_code
 
     except Exception as e:
         msg = f"Error in shell call: {traceback.format_exc()}"
         logger.error(msg)
         raise e
+
+
+def set_permissions(logger: logging.Logger) -> None:
+    """
+    Sets ExecutionPolicy to allow RemoteSigned PowerShell scripts for
+    current user.
+    """
+    shell(
+        [
+            "powershell.exe",
+            "Set-ExecutionPolicy",
+            "-Scope",
+            "CurrentUser",
+            "RemoteSigned",
+        ],
+        logger,
+    )

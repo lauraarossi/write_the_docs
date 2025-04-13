@@ -3,8 +3,12 @@ from typing_extensions import Annotated
 import traceback
 import logging
 from pathlib import Path
-from ansi2html import Ansi2HTMLConverter
-from write_the_docs.Utilities import configure_logging, shell
+from write_the_docs.Utilities import (
+    configure_logging,
+    set_permissions,
+    str_to_html,
+)
+from write_the_docs.Classes import Black, Flake8, Flowchart, Sphinx, UnitTests
 
 
 def run_all(
@@ -26,16 +30,16 @@ def run_all(
             help=r"""Name of the project to include in the documentation, e.g. My Awesome App"""
         ),
     ],
-    version: Annotated[
-        str,
-        typer.Argument(
-            help=r"""Version of code being documented, e.g. 1.0.2"""
-        ),
-    ],
     author: Annotated[
         str,
         typer.Argument(
             help=r"""Author name and/or email, e.g. Padmini Johnson, pjohnson@example.com."""
+        ),
+    ],
+    version: Annotated[
+        str,
+        typer.Argument(
+            help=r"""Version of code being documented, e.g. 1.0.2"""
         ),
     ],
     release: Annotated[
@@ -46,28 +50,40 @@ def run_all(
     ],
     line_length: Annotated[
         int,
-        typer.Option(
+        typer.Argument(
             help=r"""Optional line length for black formatter and flake8."""
         ),
     ] = 79,
     logs_output_dir: Annotated[
         str,
-        typer.Option(
+        typer.Argument(
             help=r"""Optional directory, where logs will be saved to."""
         ),
     ] = "Logs",
     logs_flowchart_dir: Annotated[
         str,
-        typer.Option(
+        typer.Argument(
             help=r"""Optional directory, where flowchart will be saved to."""
         ),
     ] = "Flowchart",
-    logs_docs_dir: Annotated[
+    docs_outputs_dir: Annotated[
         str,
-        typer.Option(
+        typer.Argument(
             help=r"""Optional directory, where docs will be saved to."""
         ),
     ] = "Docs",
+    pytest_html_path: Annotated[
+        str,
+        typer.Argument(
+            help=r"""Optional directory, where docs will be saved to."""
+        ),
+    ] = "UnitTests",
+    coverage_html_path: Annotated[
+        str,
+        typer.Argument(
+            help=r"""Optional directory, where docs will be saved to."""
+        ),
+    ] = "Coverage",
 ):
     """
     Main call for the application.
@@ -94,101 +110,66 @@ def run_all(
     logs_flowchart_dir: str = Logs
         Optional directory, where flowchart will be saved to.
     """
+    log_dir = Path(source_code_path, logs_output_dir, "log.log")
+    configure_logging(log_dir)
     logger = logging.getLogger(__name__)
+    logger.info("Starting.")
     try:
-        log_dir = f"{logs_output_dir}/log.log"
-        configure_logging(log_dir)
-        logger = logging.getLogger(__name__)
-        logger.info("Starting.")
 
-        shell(
-            [
-                "powershell.exe",
-                "Set-ExecutionPolicy",
-                "-Scope",
-                "CurrentUser",
-                "RemoteSigned",
-            ],
-            logger,
-        )
+        set_permissions(logger)
 
         logger.info("Running black.")
-        shell(
-            [
-                "powershell.exe",
-                "black",
-                f"{source_code_path}",
-                "--line-length",
-                f"{line_length}",
-            ],
-            logger,
-            False,
-        )
+        Black(source_code_path, line_length).run()
 
         logger.info("Running flake8.")
-        shell(
-            [
-                "powershell.exe",
-                "flake8",
-                f"--max-line-length={line_length}",
-                "--per-file-ignores='__init__.py:F401'",
-                f"{source_code_path}",
-            ],
-            logger,
-            False,
-        )
+        Flake8(source_code_path, line_length).run()
 
         logger.info("Running pyflowchart.")
-        flowchart_filepath = f"{logs_flowchart_dir}/flowchart.html"
+        flowchart_filepath = Path(
+            source_code_path, logs_flowchart_dir, "flowchart.html"
+        )
         Path(Path.cwd(), flowchart_filepath).parent.mkdir(
             parents=True, exist_ok=True
         )
-
-        shell(
-            [
-                "powershell.exe",
-                "python",
-                " -m",
-                "pyflowchart",
-                f"{Path(source_code_path, entry_file)}",
-                "-o",
-                flowchart_filepath,
-            ],
-            logger,
-        )
+        Flowchart(source_code_path, entry_file, flowchart_filepath).run()
 
         logger.info("Running Sphinx.")
-        shell(
-            [
-                "powershell.exe",
-                "./Sphinx.ps1",
-                "-Path",
-                f"{source_code_path}",
-                "-Project",
-                f"{project_name}",
-                "-Author",
-                f"{author}",
-                "-Version",
-                f"{version}",
-                "-Release",
-                f"{release}",
-                "-OutputDir",
-                f"{logs_docs_dir}",
-            ],
-            logger,
-        )
+        Sphinx(
+            source_code_path,
+            project_name,
+            author,
+            version,
+            release,
+            docs_outputs_dir,
+        ).run()
 
-        logger.info("Converting logs to html.")
-        with open(Path(Path.cwd(), log_dir), "r") as file:
-            lines = file.read()
+        # save pre-test logger
+        with open(Path(log_dir), "r") as file:
+            pre_test_log = file.read()
 
-        converter = Ansi2HTMLConverter(title="Log")
-        html_string = converter.convert(lines)
-
-        with open(f"{logs_output_dir}/log.html", "w") as file:
-            file.write(html_string)
+        logger.info("Running UnitTests and Coverage.")
+        pytest_html = Path(source_code_path, pytest_html_path)
+        pytest_html.parent.mkdir(parents=True, exist_ok=True)
+        coverage_html = Path(source_code_path, coverage_html_path)
+        coverage_html.parent.mkdir(parents=True, exist_ok=True)
+        UnitTests(
+            source_code_path,
+            pytest_html,
+            coverage_html,
+        ).run_coverage()
 
         logger.info("All done!")
+
+        # post-test logger
+        with open(Path(log_dir), "r") as file:
+            post_test_log = file.read()
+
+        full_log = pre_test_log + post_test_log
+        str_to_html(
+            full_log,
+            Path(source_code_path, logs_output_dir, "log.html"),
+            logger,
+        )
 
     except Exception as e:
         msg = f"Error in run_all: {traceback.format_exc()}"
