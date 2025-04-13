@@ -1,5 +1,5 @@
 import unittest
-from ...Classes import Black
+from writethedocs.Classes import Black
 
 correct_init = Black(".", 79)
 
