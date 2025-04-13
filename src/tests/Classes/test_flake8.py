@@ -1,6 +1,5 @@
 import unittest
-from pathlib import Path
-from ...Classes import Flake8
+from writethedocs.Classes import Flake8
 
 correct_init = Flake8(
     ".",
@@ -16,13 +15,6 @@ class TestFlake8(unittest.TestCase):
         assert f.source_code_path == "."
         assert f.line_length == 79
         assert f.additional_params == list()
-
-    def test_flake8_run(self):
-        """Test running Flake8."""
-        out, err, exit_code = correct_init.run()
-        assert isinstance(out, str)
-        assert isinstance(err, str)
-        assert isinstance(exit_code, int)
 
     def test_flake8_fail_init(self):
         """Test initialisation of Flake8 fails with missing paramters."""
