@@ -1,6 +1,6 @@
 import unittest
 from pathlib import Path
-from ...Classes import UnitTests
+from writethedocs.Classes import UnitTests
 
 temp_path = Path(Path(__file__).parent.parent, "temp", "Docs")
 temp_path.mkdir(exist_ok=True, parents=True)

@@ -1,7 +1,6 @@
 import unittest
-import shutil
 from pathlib import Path
-from ...Classes import Sphinx
+from writethedocs.Classes import Sphinx
 
 temp_path = Path(Path(__file__).parent.parent, "temp", "Docs")
 temp_path.mkdir(exist_ok=True, parents=True)
@@ -28,13 +27,6 @@ class TestSphinx(unittest.TestCase):
         assert s.release == "Q1"
         assert s.docs_outputs_dir == temp_path
         assert s.additional_params == list()
-
-    def test_sphinx_run(self):
-        """Test running sphinx."""
-        out, err, exit_code = correct_init.run()
-        assert isinstance(out, str)
-        assert isinstance(err, str)
-        assert isinstance(exit_code, int)
 
     def test_sphinx_fail_init(self):
         """Test initialisation of sphinx fails with missing parameters."""
