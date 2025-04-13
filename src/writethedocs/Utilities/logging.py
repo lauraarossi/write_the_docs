@@ -31,7 +31,7 @@ def configure_logging(filepath: str | Path) -> None:
             level=logging.DEBUG,
             handlers=[
                 logging.FileHandler(
-                    filename=filepath, mode="w", encoding="ansi"
+                    filename=filepath, mode="w", encoding="utf-8"
                 ),
                 logging.StreamHandler(),
             ],

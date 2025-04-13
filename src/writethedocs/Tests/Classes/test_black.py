@@ -1,6 +1,5 @@
 import unittest
-from pathlib import Path
-from write_the_docs.Classes import Black
+from ...Classes import Black
 
 correct_init = Black(".", 79)
 

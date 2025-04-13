@@ -1,7 +1,7 @@
 import unittest
 import shutil
 from pathlib import Path
-from write_the_docs.Classes import Flowchart
+from ...Classes import Flowchart
 
 
 temp_path = Path(Path(__file__).parent.parent, "temp", "Flowchart")
