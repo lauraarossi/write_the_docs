@@ -2,6 +2,8 @@
 
 Write The Docs: Python documentation tool.
 
+Requires powershell.exe.
+
 Given project details (name, author, version, release), a surce path and entry 
 file irp erfors the following:
 - Generates API style html Sphinx documentation.
