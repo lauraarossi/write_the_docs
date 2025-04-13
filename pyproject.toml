@@ -53,4 +53,4 @@ dependencies = [
 "Source" = "https://github.com/pypa/sampleproject/"
 
 [project.scripts]
-write_the_docs = "write_the_docs:app"
+write-the-docs = "write-the-docs:app"
