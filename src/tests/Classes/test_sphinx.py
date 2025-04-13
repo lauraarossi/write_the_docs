@@ -1,5 +1,4 @@
 import unittest
-import shutil
 from pathlib import Path
 from writethedocs.Classes import Sphinx
 

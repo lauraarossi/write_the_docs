@@ -1,7 +1,7 @@
 import unittest
 import logging
 from pathlib import Path
-from ...Utilities import str_to_html, configure_logging
+from writethedocs.Utilities import str_to_html, configure_logging
 
 temp_path = Path(Path(__file__).parent.parent, "temp", "logs")
 temp_path.mkdir(exist_ok=True, parents=True)
