@@ -1,0 +1,1 @@
+The tests should be run by running the command "pytest" on the root directory write_the_docs\src\write_the_docs.

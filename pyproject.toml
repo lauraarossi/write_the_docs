@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 
 [project]
-name = "WriteTheDocs"
+name = "write-the-docs"
 version = "1.0.0" 
 description = "Document a python library."
 readme = "README.md"
@@ -24,12 +24,16 @@ classifiers = [
   "Programming Language :: Python :: 3.12",
 ]
 dependencies = [
-    "black==25.1.0",
-    "flake8==7.2.0",
-    "sphinx==8.2.3",
+    "black",
+    "flake8",
+    "sphinx",
     "pyflowchart",
-    "coloredlogs==15.0.1",
-    "ansi2html==1.9.2"
+    "coloredlogs",
+    "ansi2html",
+    "typer",
+    "pytest",
+    "pytest-html-reporter",
+    "coverage"
 ]
 
 
