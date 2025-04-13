@@ -1,7 +1,6 @@
 import unittest
 from pathlib import Path
-from write_the_docs import run_all, app
-import shutil
+from ..main import run_all
 
 temp_path = Path("Tests", "temp")
 

@@ -1,4 +1,4 @@
-from subprocess import run, Popen, PIPE, CompletedProcess
+from subprocess import Popen, PIPE
 import logging
 import traceback
 

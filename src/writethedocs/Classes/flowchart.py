@@ -1,7 +1,7 @@
 import logging
 import traceback
 from pathlib import Path
-from write_the_docs.Utilities import shell
+from ..Utilities import shell
 
 
 class Flowchart:
