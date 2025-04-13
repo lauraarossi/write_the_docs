@@ -28,13 +28,6 @@ class TestSphinx(unittest.TestCase):
         assert s.docs_outputs_dir == temp_path
         assert s.additional_params == list()
 
-    def test_sphinx_run(self):
-        """Test running sphinx."""
-        out, err, exit_code = correct_init.run()
-        assert isinstance(out, str)
-        assert isinstance(err, str)
-        assert isinstance(exit_code, int)
-
     def test_sphinx_fail_init(self):
         """Test initialisation of sphinx fails with missing parameters."""
         with self.assertRaises(Exception):

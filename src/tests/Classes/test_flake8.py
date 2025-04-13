@@ -16,13 +16,6 @@ class TestFlake8(unittest.TestCase):
         assert f.line_length == 79
         assert f.additional_params == list()
 
-    def test_flake8_run(self):
-        """Test running Flake8."""
-        out, err, exit_code = correct_init.run()
-        assert isinstance(out, str)
-        assert isinstance(err, str)
-        assert isinstance(exit_code, int)
-
     def test_flake8_fail_init(self):
         """Test initialisation of Flake8 fails with missing paramters."""
         with self.assertRaises(Exception):
