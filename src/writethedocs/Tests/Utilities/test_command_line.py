@@ -1,9 +1,8 @@
 import unittest
 from pathlib import Path
 import logging
-import shutil
-from write_the_docs.Utilities import set_permissions, shell
-from write_the_docs.Classes import Sphinx
+from ...Utilities import set_permissions, shell
+from ...Classes import Sphinx
 
 temp_path = Path(Path(__file__).parent.parent, "temp", "Docs")
 temp_path.mkdir(exist_ok=True, parents=True)

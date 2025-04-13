@@ -3,12 +3,12 @@ from typing_extensions import Annotated
 import traceback
 import logging
 from pathlib import Path
-from write_the_docs.Utilities import (
+from Utilities import (
     configure_logging,
     set_permissions,
     str_to_html,
 )
-from write_the_docs.Classes import Black, Flake8, Flowchart, Sphinx, UnitTests
+from Classes import Black, Flake8, Flowchart, Sphinx, UnitTests
 
 
 def run_all(

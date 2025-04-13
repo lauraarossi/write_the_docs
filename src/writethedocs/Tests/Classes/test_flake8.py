@@ -1,6 +1,6 @@
 import unittest
 from pathlib import Path
-from write_the_docs.Classes import Flake8
+from ...Classes import Flake8
 
 correct_init = Flake8(
     ".",

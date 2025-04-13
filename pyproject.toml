@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 
 [project]
-name = "write-the-docs"
+name = "writethedocs"
 version = "1.0.0" 
 description = "Document a python library."
 readme = "README.md"
@@ -53,4 +53,4 @@ dependencies = [
 "Source" = "https://github.com/pypa/sampleproject/"
 
 [project.scripts]
-write-the-docs = "write-the-docs:app"
+writethedocs = "writethedocs:app"
