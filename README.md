@@ -1,6 +1,6 @@
-# write_the_docs
+# writethedocs
 
-Python documentation tool.
+Write The Docs: Python documentation tool.
 
 Given project details (name, author, version, release), a surce path and entry 
 file irp erfors the following:
